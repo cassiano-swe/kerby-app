@@ -1,0 +1,6 @@
+@kerby.api_HostAddress = http://localhost:5070
+
+GET {{kerby.api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

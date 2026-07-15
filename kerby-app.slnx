@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/kerby.api/kerby.api.csproj" />
+  </Folder>
+</Solution>
