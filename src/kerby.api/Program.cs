@@ -1,3 +1,4 @@
+using Kerby.Api.Exceptions;
 using Kerby.Api.Modules.Client;
 using Kerby.Api.Modules.Client.Features.AddClient;
 using Scalar.AspNetCore;
