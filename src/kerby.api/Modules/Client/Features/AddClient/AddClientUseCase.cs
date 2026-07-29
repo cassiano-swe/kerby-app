@@ -12,7 +12,7 @@ public sealed class AddClientUseCase(IContext context) : IAddClientUseCase
 {
     private readonly IContext _context = context;
 
-    public Task<Client> ExecuteAsync(Client request, CancellationToken cancellationToken)
+    public async Task<Client> ExecuteAsync(Client request, CancellationToken cancellationToken)
     {
         var clientId = Guid.NewGuid();
         var client = new Client
@@ -22,11 +22,12 @@ public sealed class AddClientUseCase(IContext context) : IAddClientUseCase
             LastName = request.LastName,
             Email = request.Email,
             PhoneNumber = request.PhoneNumber,
-            Address = request.Address
+            Address = request.Address,
         };
 
         _context.Clients.Add(client);
+        await _context.SaveChangesAsync(cancellationToken);
 
-        return Task.FromResult(client);
+        return client;
     }
 }
