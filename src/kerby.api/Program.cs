@@ -1,12 +1,18 @@
+using Kerby.Api.Abstractions;
 using Kerby.Api.Exceptions;
+using Kerby.Api.Infrastructure.Data;
 using Kerby.Api.Modules.Client;
 using Kerby.Api.Modules.Client.Features.AddClient;
 using Scalar.AspNetCore;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddDbContext<IContext, Context>(options =>
+    options.UseInMemoryDatabase("kerbydb"));
+
 builder.Services.AddOpenApi();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
