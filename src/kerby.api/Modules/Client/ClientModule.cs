@@ -1,6 +1,7 @@
 namespace Kerby.Api.Modules.Client;
 
 using Kerby.Api.Modules.Client.Features.AddClient;
+using Kerby.Api.Modules.Client.Features.DeleteClient;
 using Kerby.Api.Modules.Client.Features.GetClient;
 
 public static class ClientModule
@@ -9,7 +10,7 @@ public static class ClientModule
     {
         endpoints.MapAddClientEndpoint();
         endpoints.MapGetClientEndpoint();
-
+        endpoints.MapDeleteClientEndpoint();
         return endpoints;
     }
 }

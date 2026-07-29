@@ -3,6 +3,7 @@ using Kerby.Api.Exceptions;
 using Kerby.Api.Infrastructure.Data;
 using Kerby.Api.Modules.Client;
 using Kerby.Api.Modules.Client.Features.AddClient;
+using Kerby.Api.Modules.Client.Features.DeleteClient;
 using Kerby.Api.Modules.Client.Features.GetClient;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -19,6 +20,7 @@ builder.Services.AddProblemDetails();
 
 builder.Services.AddScoped<IAddClientUseCase, AddClientUseCase>();
 builder.Services.AddScoped<IGetClientUseCase, GetClientUseCase>();
+builder.Services.AddScoped<IDeleteClientUseCase, DeleteClientUseCase>();
 
 var app = builder.Build();
 
