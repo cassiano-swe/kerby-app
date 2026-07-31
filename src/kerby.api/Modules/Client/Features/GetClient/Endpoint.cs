@@ -6,7 +6,7 @@ public static class Endpoint
 {
     public static RouteHandlerBuilder MapGetClientEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        return endpoints.MapGet("/clients/{id}", async Task<IResult> (Guid id, IGetClientUseCase useCase, CancellationToken cancellationToken) =>
+        return endpoints.MapGet("/{id}", async Task<IResult> (Guid id, IGetClientUseCase useCase, CancellationToken cancellationToken) =>
         {
             var client = await useCase.ExecuteAsync(id, cancellationToken);
 

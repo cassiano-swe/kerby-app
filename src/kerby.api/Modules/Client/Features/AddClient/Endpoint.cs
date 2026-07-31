@@ -9,7 +9,7 @@ public static class Endpoint
 {
     public static RouteHandlerBuilder MapAddClientEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        return endpoints.MapPost("/clients", async Task<IResult> (AddClientRequest request, IAddClientUseCase useCase, CancellationToken cancellationToken) =>
+        return endpoints.MapPost("/", async Task<IResult> (AddClientRequest request, IAddClientUseCase useCase, CancellationToken cancellationToken) =>
         {
             var client = await useCase.ExecuteAsync(new Client
             {

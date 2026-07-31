@@ -9,11 +9,13 @@ public static class ClientModule
 {
     public static IEndpointRouteBuilder MapClientEndpoints(this IEndpointRouteBuilder endpoints)
     {
-        endpoints.MapAddClientEndpoint();
-        endpoints.MapGetClientEndpoint();
-        endpoints.MapDeleteClientEndpoint();
-        endpoints.MapUpdateClientEndpoint();
+        var group = endpoints.MapGroup("/api/clients").WithTags("Clients");
 
-        return endpoints;
+        group.MapAddClientEndpoint();
+        group.MapGetClientEndpoint();
+        group.MapDeleteClientEndpoint();
+        group.MapUpdateClientEndpoint();
+
+        return group;
     }
 }

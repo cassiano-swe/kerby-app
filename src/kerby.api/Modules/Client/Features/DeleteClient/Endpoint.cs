@@ -6,7 +6,7 @@ public static class Endpoint
     {
         return endpoints
             .MapDelete(
-                "/clients/{id}",
+                "/{id}",
                 async Task<IResult> (
                     Guid id,
                     IDeleteClientUseCase useCase,
