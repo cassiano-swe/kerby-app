@@ -17,7 +17,7 @@ public sealed class DeleteClientUseCase(IContext context) : IDeleteClientUseCase
     {
         var client = await _context
             .Clients.AsNoTracking()
-            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken) ?? throw new InvalidOperationException("Client not found"); ;
 
         if (client != null)
         {

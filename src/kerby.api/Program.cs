@@ -5,6 +5,7 @@ using Kerby.Api.Modules.Client;
 using Kerby.Api.Modules.Client.Features.AddClient;
 using Kerby.Api.Modules.Client.Features.DeleteClient;
 using Kerby.Api.Modules.Client.Features.GetClient;
+using Kerby.Api.Modules.Client.Features.UpdateClient;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -21,17 +22,19 @@ builder.Services.AddProblemDetails();
 builder.Services.AddScoped<IAddClientUseCase, AddClientUseCase>();
 builder.Services.AddScoped<IGetClientUseCase, GetClientUseCase>();
 builder.Services.AddScoped<IDeleteClientUseCase, DeleteClientUseCase>();
+builder.Services.AddScoped<IUpdateClientUseCase, UpdateClientUseCase>();
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.MapClientEndpoints();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference("/api-reference");
 }
-
-app.MapClientEndpoints();
 
 app.UseExceptionHandler();
 
