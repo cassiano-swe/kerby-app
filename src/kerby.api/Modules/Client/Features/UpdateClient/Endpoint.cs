@@ -2,8 +2,8 @@ namespace Kerby.Api.Modules.Client.Features.UpdateClient;
 
 using Kerby.Api.Modules.Client.Domain;
 
-public record UpdateClientRequest(string FirstName, string LastName, string Email, string PhoneNumber, string Address);
-public record UpdateClientResponse(Guid ClientId, string FirstName, string LastName, string Email, string PhoneNumber, string Address);
+public record UpdateClientRequest(string FirstName, string LastName, string Email, string PhoneNumber);
+public record UpdateClientResponse(Guid ClientId, string FirstName, string LastName, string Email, string PhoneNumber);
 
 public static class Endpoint
 {
@@ -18,10 +18,9 @@ public static class Endpoint
                 LastName = request.LastName,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
-                Address = request.Address
             }, cancellationToken);
 
-            return Results.Ok(new UpdateClientResponse(client.Id, client.FirstName, client.LastName, client.Email, client.PhoneNumber, client.Address));
+            return Results.Ok(new UpdateClientResponse(client.Id, client.FirstName, client.LastName, client.Email, client.PhoneNumber));
         })
         .WithName("UpdateClient");
     }

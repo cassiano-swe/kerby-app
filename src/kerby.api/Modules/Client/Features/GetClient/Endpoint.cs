@@ -1,6 +1,6 @@
 namespace Kerby.Api.Modules.Client.Features.GetClient;
 
-public record GetClientResponse(Guid ClientId, string FirstName, string LastName, string Email, string PhoneNumber, string Address);
+public record GetClientResponse(Guid ClientId, string FirstName, string LastName, string Email, string PhoneNumber);
 
 public static class Endpoint
 {
@@ -15,7 +15,7 @@ public static class Endpoint
                 return Results.NotFound();
             }
 
-            return Results.Ok(new GetClientResponse(client.Id, client.FirstName, client.LastName, client.Email, client.PhoneNumber, client.Address));
+            return Results.Ok(new GetClientResponse(client.Id, client.FirstName, client.LastName, client.Email, client.PhoneNumber));
         })
         .WithName("GetClient");
     }

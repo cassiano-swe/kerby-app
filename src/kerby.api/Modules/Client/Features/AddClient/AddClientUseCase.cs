@@ -22,7 +22,6 @@ public sealed class AddClientUseCase(IContext context) : IAddClientUseCase
             LastName = request.LastName,
             Email = request.Email,
             PhoneNumber = request.PhoneNumber,
-            Address = request.Address,
         };
 
         _context.Clients.Add(client);
