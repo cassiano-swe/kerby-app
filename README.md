@@ -2,6 +2,18 @@
 
 A REST API built with ASP.NET Core and .NET 10 for managing clients and registering webhook endpoints. The application uses Minimal APIs, organizes operations into modules, and separates endpoints, use cases, and domain models.
 
+## Product vision
+
+Kerby's goal is to act as a reliability layer between webhook producers—such as Mercado Pago, Stripe, GitHub, or an ERP—and the customer system that needs to receive their events. Instead of sending events directly to each customer's system, a producer would send them to Kerby, which would record the event and forward it to the configured customer endpoint.
+
+```mermaid
+flowchart TD
+  Producer["Mercado Pago / Stripe / GitHub / ERP"] -->|Webhook event| Kerby["Webhook Reliability SaaS"]
+  Kerby -->|Record event and forward| Customer["Customer endpoint"]
+```
+
+With this intermediary in place, the service is intended to provide visibility into whether deliveries succeeded and, when a delivery fails, support retrying it. These capabilities describe the product vision; they are not implemented in the current codebase.
+
 > The implemented scope covers client registration and management, as well as webhook endpoint configuration. Receiving and forwarding webhook events are not yet implemented.
 
 ## Technologies and dependencies
