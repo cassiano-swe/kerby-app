@@ -1,5 +1,7 @@
 namespace Kerby.Api.Modules.Webhook.Features.AddEndpoint;
 
+using FluentValidation;
+
 public record AddEndpointRequest(
     Guid ClientId,
     string Name,
@@ -24,10 +26,17 @@ public static class Endpoint
                 async Task<IResult> (
                     AddEndpointRequest request,
                     IAddEndpointUseCase useCase,
+                    IValidator<AddEndpointRequest> validator,
                     HttpContext httpContext,
                     CancellationToken cancellationToken
                 ) =>
                 {
+                    var validationResult = await validator.ValidateAsync(request, cancellationToken);
+                    if (!validationResult.IsValid)
+                    {
+                        return Results.ValidationProblem(validationResult.ToDictionary());
+                    }
+
                     var endpoint = await useCase.ExecuteAsync(
                         new Kerby.Api.Modules.Webhook.Domain.Endpoint
                         {

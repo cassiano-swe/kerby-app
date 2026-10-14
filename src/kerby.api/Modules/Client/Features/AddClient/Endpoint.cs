@@ -1,5 +1,6 @@
 namespace Kerby.Api.Modules.Client.Features.AddClient;
 
+using FluentValidation;
 using Kerby.Api.Modules.Client.Domain;
 
 public record AddClientRequest(string FirstName, string LastName, string Email, string PhoneNumber);
@@ -9,8 +10,18 @@ public static class Endpoint
 {
     public static RouteHandlerBuilder MapAddClientEndpoint(this IEndpointRouteBuilder endpoints)
     {
-        return endpoints.MapPost("/", async Task<IResult> (AddClientRequest request, IAddClientUseCase useCase, CancellationToken cancellationToken) =>
+        return endpoints.MapPost("/", async Task<IResult> (
+            AddClientRequest request,
+            IAddClientUseCase useCase,
+            IValidator<AddClientRequest> validator,
+            CancellationToken cancellationToken) =>
         {
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
+            if (!validationResult.IsValid)
+            {
+                return Results.ValidationProblem(validationResult.ToDictionary());
+            }
+
             var client = await useCase.ExecuteAsync(new Client
             {
                 FirstName = request.FirstName,

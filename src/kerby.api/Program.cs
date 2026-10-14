@@ -1,6 +1,8 @@
+using FluentValidation;
 using Kerby.Api.Abstractions;
 using Kerby.Api.Exceptions;
 using Kerby.Api.Infrastructure.Data;
+using Kerby.Api.Modules.Client.Domain;
 using Kerby.Api.Modules.Client.Features.AddClient;
 using Kerby.Api.Modules.Client.Features.DeleteClient;
 using Kerby.Api.Modules.Client.Features.GetClient;
@@ -20,6 +22,10 @@ builder.Services.AddDbContext<IContext, Context>(options => options.UseInMemoryD
 builder.Services.AddOpenApi();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+
+builder.Services.AddScoped<IValidator<AddClientRequest>, AddClientRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdateClientRequest>, UpdateClientRequestValidator>();
+builder.Services.AddScoped<IValidator<AddEndpointRequest>, AddEndpointRequestValidator>();
 
 builder.Services.AddScoped<IAddClientUseCase, AddClientUseCase>();
 builder.Services.AddScoped<IGetClientUseCase, GetClientUseCase>();
