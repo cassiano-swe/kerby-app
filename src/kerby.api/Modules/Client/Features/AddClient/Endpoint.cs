@@ -30,7 +30,7 @@ public static class Endpoint
                 PhoneNumber = request.PhoneNumber,
             }, cancellationToken);
 
-            return Results.Created($"/clients/{client.Id}", new AddClientResponse(client.Id, client.FirstName, client.LastName, client.Email, client.PhoneNumber));
+            return Results.Created($"/api/clients/{client.Id}", new AddClientResponse(client.Id, client.FirstName, client.LastName, client.Email, client.PhoneNumber));
         })
         .WithName("AddClient");
     }

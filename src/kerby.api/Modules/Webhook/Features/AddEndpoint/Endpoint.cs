@@ -50,7 +50,7 @@ public static class Endpoint
                     var publicBaseUrl =
                         $"{httpContext.Request.Scheme}://{httpContext.Request.Host}";
                     return Results.Created(
-                        $"/endpoints/{endpoint.Id}",
+                        (string?)null,
                         new AddEndpointResponse(
                             endpoint.Id,
                             endpoint.PublicToken,
