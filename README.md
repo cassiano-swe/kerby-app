@@ -69,6 +69,7 @@ To retrieve, update, or delete a client, replace `{id}` with the UUID returned w
 |---|---|---|---|
 | `POST` | `/api/webhooks/` | Registers a webhook endpoint for a client. | `201 Created` |
 | `POST` | `/in/{publicToken}` | Receives and stores a webhook event. | `201 Created`, `404 Not Found`, `415 Unsupported Media Type` |
+| `GET` | `/api/webhook-events` | Lists received webhook events. | `200 OK`, `400 Bad Request` |
 
 The request body contains the client ID, a name, a provider, and the destination URL:
 
@@ -85,12 +86,24 @@ The response includes the endpoint ID, a public token, and a public URL in the `
 
 Event delivery to the configured destination URL is not yet implemented.
 
+Received events can be filtered by `clientId`, `endpointId`, `status`, `startDate`,
+and `endDate`. The list is ordered from newest to oldest and supports the `page`
+and `pageSize` query parameters. `startDate` is inclusive and `endDate` is
+exclusive. For example:
+
+```http
+GET /api/webhook-events?clientId=00000000-0000-0000-0000-000000000000&status=Pending&page=1&pageSize=50
+```
+
+Because delivery is not implemented yet, newly received events have the
+`Pending` delivery status, zero attempts, and no last HTTP status code.
+
 ## Code organization
 
 The API project is located in `src/kerby.api/` and follows a modular organization:
 
 - `Modules/Client/`: client domain and features (`AddClient`, `GetClient`, `UpdateClient`, and `DeleteClient`).
-- `Modules/Webhook/`: webhook endpoint and event domain, with `AddEndpoint` and `ReceiveWebhook` features.
+- `Modules/Webhook/`: webhook endpoint and event domain, with `AddEndpoint`, `ReceiveWebhook`, and `ListWebhookEvents` features.
 - `Abstractions/`: contracts, including the `IContext` data access abstraction.
 - `Infrastructure/Data/`: Entity Framework Core context implementation.
 - `Exceptions/`: global exception handling.
@@ -102,4 +115,4 @@ Each feature keeps its endpoints, use cases, and, where applicable, validators i
 
 The application configures Entity Framework Core with the InMemory provider and a database named `kerbydb`. Data is held only in memory and is not retained when the application restarts. The project does not define a relational database or connection string.
 
-Although FluentValidation is included and a validator exists for the client domain, the feature validators are empty, and no integration was found that executes them automatically.
+Request validators are registered explicitly and invoked by the applicable Minimal API handlers.

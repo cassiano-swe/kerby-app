@@ -44,6 +44,9 @@ public sealed class ReceiveWebhookUseCase(IContext context) : IReceiveWebhookUse
             Body = request.Body,
             QueryString = request.QueryString,
             ReceivedAt = DateTime.UtcNow,
+            DeliveryStatus = DeliveryStatus.Pending,
+            AttemptsCount = 0,
+            LastStatusCode = null,
         };
 
         _context.WebhookEvents.Add(webhookEvent);

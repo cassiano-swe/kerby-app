@@ -8,6 +8,7 @@ using Kerby.Api.Modules.Client.Features.DeleteClient;
 using Kerby.Api.Modules.Client.Features.GetClient;
 using Kerby.Api.Modules.Client.Features.UpdateClient;
 using Kerby.Api.Modules.Webhook.Features.AddEndpoint;
+using Kerby.Api.Modules.Webhook.Features.ListWebhookEvents;
 using Kerby.Api.Modules.Webhook.Features.ReceiveWebhook;
 using Kerby.Api.Modules.Client;
 using Kerby.Api.Modules.Webhook;
@@ -27,6 +28,10 @@ builder.Services.AddProblemDetails();
 builder.Services.AddScoped<IValidator<AddClientRequest>, AddClientRequestValidator>();
 builder.Services.AddScoped<IValidator<UpdateClientRequest>, UpdateClientRequestValidator>();
 builder.Services.AddScoped<IValidator<AddEndpointRequest>, AddEndpointRequestValidator>();
+builder.Services.AddScoped<
+    IValidator<ListWebhookEventsRequest>,
+    ListWebhookEventsRequestValidator
+>();
 
 builder.Services.AddScoped<IAddClientUseCase, AddClientUseCase>();
 builder.Services.AddScoped<IGetClientUseCase, GetClientUseCase>();
@@ -34,6 +39,7 @@ builder.Services.AddScoped<IDeleteClientUseCase, DeleteClientUseCase>();
 builder.Services.AddScoped<IUpdateClientUseCase, UpdateClientUseCase>();
 builder.Services.AddScoped<IAddEndpointUseCase, AddEndpointUseCase>();
 builder.Services.AddScoped<IReceiveWebhookUseCase, ReceiveWebhookUseCase>();
+builder.Services.AddScoped<IListWebhookEventsUseCase, ListWebhookEventsUseCase>();
 
 var app = builder.Build();
 

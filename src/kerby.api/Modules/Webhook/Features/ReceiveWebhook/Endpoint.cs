@@ -15,7 +15,7 @@ public static class Endpoint
     {
         return endpoints
             .MapPost(
-                "/in/{publicToken}",
+                "/{publicToken}",
                 async Task<IResult> (
                     string publicToken,
                     HttpRequest request,
@@ -67,8 +67,7 @@ public static class Endpoint
                     );
                 }
             )
-            .WithName("ReceiveWebhook")
-            .WithTags("Webhooks");
+            .WithName("ReceiveWebhook");
     }
 
     private static bool TryGetTextEncoding(string? contentType, out Encoding encoding)

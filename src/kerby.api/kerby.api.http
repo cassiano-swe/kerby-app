@@ -23,3 +23,13 @@ X-Webhook-Signature: example-signature
 }
 
 ###
+
+GET {{kerby.api_HostAddress}}/api/webhook-events?page=1&pageSize=50
+Accept: application/json
+
+###
+
+GET {{kerby.api_HostAddress}}/api/webhook-events?clientId=00000000-0000-0000-0000-000000000000&status=Pending&startDate=2026-10-01T00:00:00Z&endDate=2026-11-01T00:00:00Z
+Accept: application/json
+
+###
