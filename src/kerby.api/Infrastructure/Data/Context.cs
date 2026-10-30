@@ -10,4 +10,6 @@ public class Context(DbContextOptions<Context> options) : DbContext(options), IC
     public DbSet<Client> Clients { get; set; }
 
     public DbSet<Endpoint> Endpoints { get; set; }
+
+    public DbSet<WebhookEvent> WebhookEvents { get; set; }
 }

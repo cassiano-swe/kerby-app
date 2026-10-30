@@ -14,4 +14,6 @@ public interface IContext
     public DbSet<Client> Clients { get; set; }
 
     public DbSet<Endpoint> Endpoints { get; set; }
+
+    public DbSet<WebhookEvent> WebhookEvents { get; set; }
 }

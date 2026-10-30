@@ -8,6 +8,7 @@ using Kerby.Api.Modules.Client.Features.DeleteClient;
 using Kerby.Api.Modules.Client.Features.GetClient;
 using Kerby.Api.Modules.Client.Features.UpdateClient;
 using Kerby.Api.Modules.Webhook.Features.AddEndpoint;
+using Kerby.Api.Modules.Webhook.Features.ReceiveWebhook;
 using Kerby.Api.Modules.Client;
 using Kerby.Api.Modules.Webhook;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,7 @@ builder.Services.AddScoped<IGetClientUseCase, GetClientUseCase>();
 builder.Services.AddScoped<IDeleteClientUseCase, DeleteClientUseCase>();
 builder.Services.AddScoped<IUpdateClientUseCase, UpdateClientUseCase>();
 builder.Services.AddScoped<IAddEndpointUseCase, AddEndpointUseCase>();
+builder.Services.AddScoped<IReceiveWebhookUseCase, ReceiveWebhookUseCase>();
 
 var app = builder.Build();
 

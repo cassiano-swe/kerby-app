@@ -1,6 +1,7 @@
 namespace Kerby.Api.Modules.Webhook;
 
 using Kerby.Api.Modules.Webhook.Features.AddEndpoint;
+using Kerby.Api.Modules.Webhook.Features.ReceiveWebhook;
 
 public static class WebhookModule
 {
@@ -9,6 +10,7 @@ public static class WebhookModule
         var group = endpoints.MapGroup("/api/webhooks").WithTags("Webhooks");
 
         group.MapAddEndpointEndpoint();
+        endpoints.MapReceiveWebhookEndpoint();
 
         return group;
     }

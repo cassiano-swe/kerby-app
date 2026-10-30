@@ -1,6 +1,25 @@
-@kerby.api_HostAddress = http://localhost:5070
+@kerby.api_HostAddress = http://localhost:8081
+@publicToken = replace-with-the-token-returned-by-add-endpoint
 
-GET {{kerby.api_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{kerby.api_HostAddress}}/api/webhooks/
+Content-Type: application/json
+
+{
+  "clientId": "00000000-0000-0000-0000-000000000000",
+  "name": "Orders",
+  "provider": "example",
+  "destinationUrl": "https://example.com/webhooks/orders"
+}
+
+###
+
+POST {{kerby.api_HostAddress}}/in/{{publicToken}}?source=example
+Content-Type: application/json
+X-Webhook-Signature: example-signature
+
+{
+  "event": "order.created",
+  "orderId": "123"
+}
 
 ###
