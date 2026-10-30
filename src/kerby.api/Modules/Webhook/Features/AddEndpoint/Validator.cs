@@ -7,7 +7,8 @@ public sealed class AddEndpointRequestValidator : AbstractValidator<AddEndpointR
     public AddEndpointRequestValidator()
     {
         RuleFor(request => request.ClientId)
-            .NotEmpty();
+            .NotEqual(Guid.Empty)
+            .WithMessage("ClientId must be a valid GUID.");
 
         RuleFor(request => request.Name)
             .NotEmpty()

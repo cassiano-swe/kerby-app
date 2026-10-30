@@ -1,6 +1,8 @@
 namespace Kerby.Api.Modules.Webhook.Features.AddEndpoint;
 
 using Kerby.Api.Abstractions;
+using Kerby.Api.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 public interface IAddEndpointUseCase
 {
@@ -18,6 +20,10 @@ public sealed class AddEndpointUseCase : IAddEndpointUseCase
 
     public async Task<Domain.Endpoint> ExecuteAsync(Kerby.Api.Modules.Webhook.Domain.Endpoint request, CancellationToken cancellationToken)
     {
+        var client = await _context.Clients
+            .FirstOrDefaultAsync(c => c.Id == request.ClientId, cancellationToken)
+            ?? throw new NotFoundException(nameof(Client), request.ClientId);
+        
         var endpointId = Guid.NewGuid();
         var endpoint = new Domain.Endpoint
         {

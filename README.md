@@ -14,7 +14,7 @@ flowchart TD
 
 With this intermediary in place, the service is intended to provide visibility into whether deliveries succeeded and, when a delivery fails, support retrying it. These capabilities describe the product vision; they are not implemented in the current codebase.
 
-> The implemented scope covers client registration and management, as well as webhook endpoint configuration. Receiving and forwarding webhook events are not yet implemented.
+> The implemented scope covers client registration and management, webhook endpoint configuration, and receiving webhook events. Forwarding events is not yet implemented.
 
 ## Technologies and dependencies
 
@@ -68,6 +68,7 @@ To retrieve, update, or delete a client, replace `{id}` with the UUID returned w
 | Method | Route | Description | Main responses |
 |---|---|---|---|
 | `POST` | `/api/webhooks/` | Registers a webhook endpoint for a client. | `201 Created` |
+| `POST` | `/in/{publicToken}` | Receives and stores a webhook event. | `201 Created`, `404 Not Found`, `415 Unsupported Media Type` |
 
 The request body contains the client ID, a name, a provider, and the destination URL:
 
@@ -80,14 +81,16 @@ The request body contains the client ID, a name, a provider, and the destination
 }
 ```
 
-The response includes the endpoint ID, a public token, and a public URL in the `/in/{token}` format. Currently, this URL is informational: no `/in/{token}` inbound route has been implemented.
+The response includes the endpoint ID, a public token, and a public URL in the `/in/{token}` format. Send JSON or textual content to that public URL to create a webhook event. The API stores the raw text body, headers, query string, and receipt time. Binary content and requests without a supported `Content-Type` are rejected.
+
+Event delivery to the configured destination URL is not yet implemented.
 
 ## Code organization
 
 The API project is located in `src/kerby.api/` and follows a modular organization:
 
 - `Modules/Client/`: client domain and features (`AddClient`, `GetClient`, `UpdateClient`, and `DeleteClient`).
-- `Modules/Webhook/`: webhook endpoint domain and features; currently includes `AddEndpoint`.
+- `Modules/Webhook/`: webhook endpoint and event domain, with `AddEndpoint` and `ReceiveWebhook` features.
 - `Abstractions/`: contracts, including the `IContext` data access abstraction.
 - `Infrastructure/Data/`: Entity Framework Core context implementation.
 - `Exceptions/`: global exception handling.
