@@ -39,6 +39,22 @@ In the development environment, the interactive API reference is available at:
 - Scalar: <http://localhost:8081/api-reference>
 - OpenAPI document: <http://localhost:8081/openapi/v1.json>
 
+## Run with Docker
+
+From the repository root, build and run the image:
+
+```bash
+docker build -f src/kerby.api/Dockerfile -t kerby-api .
+docker run --rm -p 8081:8080 --name kerby-api kerby-api
+docker run --rm -p 8081:8080 -e ASPNETCORE_ENVIRONMENT=Development --name kerby-api kerby-api
+```
+
+The API is available at <http://localhost:8081>. The image uses a multi-stage
+.NET 10 build and runs as a non-root user. The default environment is
+`Production`; to enable Scalar and OpenAPI locally, add
+`-e ASPNETCORE_ENVIRONMENT=Development` before the image name in `docker run`.
+Data remains in memory and is lost when the application stops.
+
 ## Endpoints
 
 ### Clients
