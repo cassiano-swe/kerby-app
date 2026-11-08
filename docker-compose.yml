@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-kerbydb}
+      POSTGRES_USER: ${POSTGRES_USER:-kerby}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  kerby.api:
+    image: kerby.api:local
+    build:
+      context: .
+      dockerfile: src/kerby.api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ASPNETCORE_HTTP_PORTS: "8080"
+      ConnectionStrings__KerbyDb: 'Host=postgres;Port=5432;Database=${POSTGRES_DB:-kerbydb};Username=${POSTGRES_USER:-kerby};Password="${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD no arquivo .env}"'
+    ports:
+      - "127.0.0.1:${KERBY_API_PORT:-8081}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

@@ -1,11 +1,25 @@
 @kerby.api_HostAddress = http://localhost:8081
+# Start PostgreSQL and apply EF migrations before running these requests.
+@clientId = replace-with-the-id-returned-by-add-client
 @publicToken = replace-with-the-token-returned-by-add-endpoint
+
+POST {{kerby.api_HostAddress}}/api/clients/
+Content-Type: application/json
+
+{
+  "firstName": "Ana",
+  "lastName": "Silva",
+  "email": "ana@example.com",
+  "phoneNumber": "+5511999999999"
+}
+
+###
 
 POST {{kerby.api_HostAddress}}/api/webhooks/
 Content-Type: application/json
 
 {
-  "clientId": "00000000-0000-0000-0000-000000000000",
+  "clientId": "{{clientId}}",
   "name": "Orders",
   "provider": "example",
   "destinationUrl": "https://example.com/webhooks/orders"
@@ -29,7 +43,7 @@ Accept: application/json
 
 ###
 
-GET {{kerby.api_HostAddress}}/api/webhook-events?clientId=00000000-0000-0000-0000-000000000000&status=Pending&startDate=2026-10-01T00:00:00Z&endDate=2026-11-01T00:00:00Z
+GET {{kerby.api_HostAddress}}/api/webhook-events?clientId={{clientId}}&status=Pending&startDate=2026-10-01T00:00:00Z&endDate=2026-11-01T00:00:00Z
 Accept: application/json
 
 ###

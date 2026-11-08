@@ -2,6 +2,8 @@ namespace Kerby.Api.Exceptions;
 
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 internal sealed class GlobalExceptionHandler(
     IProblemDetailsService problemDetailsService,
@@ -18,6 +20,8 @@ internal sealed class GlobalExceptionHandler(
 
         httpContext.Response.StatusCode = exception switch
         {
+            DbUpdateException { InnerException: PostgresException
+                { SqlState: PostgresErrorCodes.ForeignKeyViolation } } => StatusCodes.Status409Conflict,
             ApplicationException => StatusCodes.Status400BadRequest,
             UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
             NotFoundException => StatusCodes.Status404NotFound,
@@ -33,7 +37,9 @@ internal sealed class GlobalExceptionHandler(
                 ProblemDetails = new ProblemDetails
                 {
                     Status = httpContext.Response.StatusCode,
-                    Title = "An unexpected error occurred while processing your request.",
+                    Title = httpContext.Response.StatusCode == StatusCodes.Status409Conflict
+                        ? "The operation conflicts with related records."
+                        : "An unexpected error occurred while processing your request.",
                 },
             }
         );

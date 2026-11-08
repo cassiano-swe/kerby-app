@@ -78,8 +78,8 @@ Do not fix these limitations incidentally when unrelated to the request. If a ta
 ## Persistence and configuration
 
 - The project targets `net10.0`, with nullable reference types and implicit usings enabled.
-- EF Core is configured with the InMemory provider and database name `kerbydb` in `Program.cs`. Data does not survive an application restart.
-- No relational provider, connection string, or migrations have been identified in the current project. Do not claim persistent database support unless it is implemented.
+- EF Core uses PostgreSQL through Npgsql in `Program.cs`, configured with `ConnectionStrings:KerbyDb`. Data survives application restarts.
+- Migrations live in `Infrastructure/Data/Migrations` and must be applied explicitly. Docker Compose provides PostgreSQL 17 with a named volume. Required FKs link Endpoint.ClientId to Client.Id and WebhookEvent.EndpointId to Endpoint.Id, with restricted deletion; FK conflicts return 409.
 - OpenAPI and Scalar are configured only in the `Development` environment. The `http` profile in `Properties/launchSettings.json` uses `http://localhost:8081`.
 - Never put credentials, real tokens, or secrets in source code, committed configuration, or documentation.
 
@@ -90,7 +90,9 @@ The versions declared in `src/kerby.api/kerby.api.csproj` are the source of trut
 - FluentValidation 12.1.1
 - Microsoft.AspNetCore.OpenApi 10.0.10
 - Microsoft.EntityFrameworkCore 10.0.10
-- Microsoft.EntityFrameworkCore.InMemory 10.0.10
+- Microsoft.EntityFrameworkCore.Relational 10.0.10
+- Microsoft.EntityFrameworkCore.Design 10.0.10
+- Npgsql.EntityFrameworkCore.PostgreSQL 10.0.3
 - Microsoft.OpenApi 2.11.0
 - Scalar.AspNetCore 2.16.11
 
@@ -112,11 +114,10 @@ Run these from the repository root; the .NET 10 SDK is required:
 ```bash
 dotnet restore kerby-app.slnx
 dotnet build kerby-app.slnx
-dotnet test kerby-app.slnx
 dotnet run --project src/kerby.api/kerby.api.csproj --launch-profile http
 ```
 
-No test project has currently been found in the repository; `dotnet test` may not run any tests. When adding tests, use a project structure and framework compatible with the solution and include the project in the solution. With the `http` profile, the API runs at `http://localhost:8081`; Scalar is at `/api-reference` and OpenAPI at `/openapi/v1.json` in the development environment.
+With the `http` profile, the API runs at `http://localhost:8081`; Scalar is at `/api-reference` and OpenAPI at `/openapi/v1.json` in the development environment.
 
 ## Change scope and safety
 

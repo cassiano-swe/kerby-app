@@ -19,7 +19,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddDbContext<IContext, Context>(options => options.UseInMemoryDatabase("kerbydb"));
+var connectionString = builder.Configuration.GetConnectionString("KerbyDb");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException("Configure ConnectionStrings:KerbyDb for PostgreSQL.");
+}
+builder.Services.AddDbContext<IContext, Context>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddOpenApi();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();

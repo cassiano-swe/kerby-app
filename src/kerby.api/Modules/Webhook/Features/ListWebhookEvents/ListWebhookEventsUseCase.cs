@@ -43,6 +43,11 @@ public sealed class ListWebhookEventsUseCase(IContext context) : IListWebhookEve
 {
     private readonly IContext _context = context;
 
+    // Dates without an offset are interpreted as UTC; offset-bound dates are converted.
+    private static DateTime ToUtc(DateTime value) => value.Kind == DateTimeKind.Unspecified
+        ? DateTime.SpecifyKind(value, DateTimeKind.Utc)
+        : value.ToUniversalTime();
+
     public async Task<WebhookEventList> ExecuteAsync(
         ListWebhookEventsFilter filter,
         CancellationToken cancellationToken
@@ -71,12 +76,12 @@ public sealed class ListWebhookEventsUseCase(IContext context) : IListWebhookEve
 
         if (filter.StartDate.HasValue)
         {
-            query = query.Where(item => item.WebhookEvent.ReceivedAt >= filter.StartDate.Value);
+            query = query.Where(item => item.WebhookEvent.ReceivedAt >= ToUtc(filter.StartDate.Value));
         }
 
         if (filter.EndDate.HasValue)
         {
-            query = query.Where(item => item.WebhookEvent.ReceivedAt < filter.EndDate.Value);
+            query = query.Where(item => item.WebhookEvent.ReceivedAt < ToUtc(filter.EndDate.Value));
         }
 
         var totalCount = await query.CountAsync(cancellationToken);
