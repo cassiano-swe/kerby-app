@@ -16,4 +16,6 @@ public interface IContext
     public DbSet<Endpoint> Endpoints { get; set; }
 
     public DbSet<WebhookEvent> WebhookEvents { get; set; }
+
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
 }

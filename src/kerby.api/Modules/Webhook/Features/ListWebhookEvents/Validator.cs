@@ -37,6 +37,15 @@ public sealed class ListWebhookEventsRequestValidator
             .GreaterThanOrEqualTo(1)
             .When(request => request.Page.HasValue);
 
+        RuleFor(request => request.Page)
+            .Must(
+                (request, page) =>
+                    !page.HasValue
+                    || ((long)page.Value - 1) * (request.PageSize ?? 50) <= int.MaxValue
+            )
+            .WithMessage("The requested page offset is too large.")
+            .When(request => request.Page.HasValue);
+
         RuleFor(request => request.PageSize)
             .InclusiveBetween(1, 100)
             .When(request => request.PageSize.HasValue);

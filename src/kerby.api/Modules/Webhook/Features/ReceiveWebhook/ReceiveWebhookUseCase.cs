@@ -4,6 +4,7 @@ using Kerby.Api.Abstractions;
 using Kerby.Api.Exceptions;
 using Kerby.Api.Modules.Webhook.Domain;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 public interface IReceiveWebhookUseCase
 {
@@ -50,6 +51,21 @@ public sealed class ReceiveWebhookUseCase(IContext context) : IReceiveWebhookUse
         };
 
         _context.WebhookEvents.Add(webhookEvent);
+        _context.OutboxMessages.Add(new OutboxMessage
+        {
+            Id = Guid.NewGuid(),
+            EventId = webhookEvent.Id,
+            Payload = JsonSerializer.Serialize(new
+            {
+                EventId = webhookEvent.Id,
+                endpoint.DestinationUrl,
+                webhookEvent.Headers,
+                webhookEvent.Body,
+                webhookEvent.QueryString,
+            }),
+            CreatedAt = webhookEvent.ReceivedAt,
+            ProcessedAt = null,
+        });
         await _context.SaveChangesAsync(cancellationToken);
 
         // TODO: Implement delivery, including the original query string. Before enabling it,

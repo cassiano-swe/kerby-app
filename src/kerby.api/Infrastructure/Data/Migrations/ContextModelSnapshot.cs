@@ -84,6 +84,35 @@ namespace kerby.api.Infrastructure.Data.Migrations
                     b.ToTable("Endpoints");
                 });
 
+            modelBuilder.Entity("Kerby.Api.Modules.Webhook.Domain.OutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Payload")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId")
+                        .IsUnique();
+
+                    b.HasIndex("ProcessedAt", "CreatedAt");
+
+                    b.ToTable("OutboxMessages");
+                });
+
             modelBuilder.Entity("Kerby.Api.Modules.Webhook.Domain.WebhookEvent", b =>
                 {
                     b.Property<Guid>("Id")
@@ -121,6 +150,8 @@ namespace kerby.api.Infrastructure.Data.Migrations
 
                     b.HasIndex("EndpointId");
 
+                    b.HasIndex("ReceivedAt", "Id");
+
                     b.ToTable("WebhookEvents");
                 });
 
@@ -129,6 +160,15 @@ namespace kerby.api.Infrastructure.Data.Migrations
                     b.HasOne("Kerby.Api.Modules.Client.Domain.Client", null)
                         .WithMany()
                         .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Kerby.Api.Modules.Webhook.Domain.OutboxMessage", b =>
+                {
+                    b.HasOne("Kerby.Api.Modules.Webhook.Domain.WebhookEvent", null)
+                        .WithMany()
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

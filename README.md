@@ -143,6 +143,19 @@ The response includes the endpoint ID, a public token, and a public URL in the `
 
 Event delivery to the configured destination URL is not yet implemented.
 
+Each received event also creates one pending message in `OutboxMessages`. The
+event and message are saved atomically in the same database transaction. The
+message's UUID primary key (`Id`) is its idempotency key and must be reused for
+every delivery attempt; `EventId` uniquely references the received event. This
+does not deduplicate repeated inbound requests from a provider.
+
+`Payload` stores a JSON snapshot of the destination URL, original body, headers,
+query string, and event ID. `CreatedAt` is UTC and `ProcessedAt` remains null
+until processing succeeds. An index on `ProcessedAt` and `CreatedAt` supports
+pending-message queries. Outbox processing, HTTP delivery, and retries are not
+implemented yet; persisting an idempotency key alone does not guarantee that
+the destination deduplicates deliveries.
+
 Received events can be filtered by `clientId`, `endpointId`, `status`, `startDate`,
 and `endDate`. The list is ordered from newest to oldest and supports the `page`
 and `pageSize` query parameters. `startDate` is inclusive and `endDate` is
